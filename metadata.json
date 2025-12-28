@@ -1,0 +1,8 @@
+{
+  "requestFramePermissions": [
+    "microphone",
+    "camera"
+  ],
+  "name": "J.A.R.V.I.S. Advanced Intelligence",
+  "description": ""
+}

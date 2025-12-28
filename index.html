@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>J.A.R.V.I.S. Interface</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Librairies de traitement de documents -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <style>
+        @keyframes rotate-ccw { from { transform: rotate(0deg); } to { transform: rotate(-360deg); } }
+        @keyframes rotate-cw { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        @keyframes bar-grow { 0%, 100% { height: 10%; } 50% { height: 100%; } }
+        @keyframes pulse-glow { 0%, 100% { filter: drop-shadow(0 0 5px #00e5ff); opacity: 1; } 50% { filter: drop-shadow(0 0 25px #00e5ff); opacity: 0.7; } }
+        @keyframes scanning { 0% { transform: translateY(-100%); opacity: 0; } 50% { opacity: 1; } 100% { transform: translateY(1000%); opacity: 0; } }
+        @keyframes float { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-15px); } }
+        @keyframes orbit { from { transform: rotate(0deg) translateX(20px) rotate(0deg); } to { transform: rotate(360deg) translateX(20px) rotate(-360deg); } }
+        @keyframes glitch { 
+            0% { clip-path: inset(40% 0 61% 0); }
+            20% { clip-path: inset(92% 0 1% 0); }
+            40% { clip-path: inset(43% 0 1% 0); }
+            60% { clip-path: inset(25% 0 58% 0); }
+            80% { clip-path: inset(54% 0 7% 0); }
+            100% { clip-path: inset(58% 0 43% 0); }
+        }
+
+        .animate-rotate-ccw { animation: rotate-ccw 40s linear infinite; }
+        .animate-rotate-cw { animation: rotate-cw 30s linear infinite; }
+        .animate-rotate-cw-fast { animation: rotate-cw 10s linear infinite; }
+        .animate-bar { animation: bar-grow 0.4s ease-in-out infinite; }
+        .animate-pulse-glow { animation: pulse-glow 2s ease-in-out infinite; }
+        .animate-float { animation: float 6s ease-in-out infinite; }
+        .animate-orbit { animation: orbit 4s linear infinite; }
+
+        .scanning-line {
+            position: absolute;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, transparent, #00e5ff, transparent);
+            box-shadow: 0 0 20px #00e5ff;
+            animation: scanning 2s linear infinite;
+            z-index: 50;
+            pointer-events: none;
+        }
+
+        body {
+            background-color: #010409;
+            margin: 0;
+            color: #e2e8f0;
+            font-family: 'Inter', system-ui, sans-serif;
+            overflow: hidden;
+            background-image: 
+                radial-gradient(circle at 50% 50%, #00e5ff0a 0%, transparent 70%),
+                url("https://www.transparenttextures.com/patterns/carbon-fibre.png");
+        }
+
+        .scanline {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(to bottom, transparent 50%, rgba(0, 229, 255, 0.03) 50%);
+            background-size: 100% 4px;
+            pointer-events: none;
+            z-index: 100;
+        }
+
+        .hex-bg {
+            background-image: radial-gradient(circle, #00e5ff08 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
+
+        .hologram-flicker {
+            animation: glitch 1s linear infinite;
+            opacity: 0.1;
+        }
+
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(0, 229, 255, 0.3); border-radius: 10px; }
+    </style>
+    <script type="importmap">
+    {
+      "imports": {
+        "@google/genai": "https://esm.sh/@google/genai@^1.34.0",
+        "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
+        "react/": "https://esm.sh/react@^19.2.3/",
+        "react": "https://esm.sh/react@^19.2.3"
+      }
+    }
+    </script>
+</head>
+<body class="hex-bg">
+    <div class="scanline"></div>
+    <div id="root"></div>
+    <script type="module" src="index.tsx"></script>
+</body>
+</html>
