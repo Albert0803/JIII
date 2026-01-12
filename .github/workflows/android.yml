@@ -29,13 +29,13 @@ jobs:
           npx cap add android || echo "Dossier déjà présent"
           npx cap sync android
 
-      - name: Force Java 17 Everywhere
-        # Cette étape écrase toute mention de Java 21 par Java 17 dans ton projet
+      - name: Force Java 17 Compatibility
+        # Cette étape remplace toutes les mentions de Java 21 par Java 17 dans vos fichiers Gradle
         run: |
           find android -name "build.gradle" -exec sed -i 's/JavaVersion.VERSION_21/JavaVersion.VERSION_17/g' {} +
           find android -name "build.gradle" -exec sed -i 's/sourceCompatibility = 21/sourceCompatibility = 17/g' {} +
           find android -name "build.gradle" -exec sed -i 's/targetCompatibility = 21/targetCompatibility = 17/g' {} +
-          find android -name "gradle.properties" -exec sed -i 's/VERSION_21/VERSION_17/g' {} +
+          find android -name "build.gradle" -exec sed -i 's/jvmTarget = "21"/jvmTarget = "17"/g' {} +
 
       - name: Build APK
         run: |
