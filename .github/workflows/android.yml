@@ -15,8 +15,6 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
-          # Force l'utilisation globale de Java 17
-          check-latest: true
 
       - name: Install dependencies
         run: npm install --force
@@ -31,11 +29,16 @@ jobs:
           npx cap add android || echo "Dossier déjà présent"
           npx cap sync android
 
+      - name: Force Java 17 in Gradle Files
+        # Cette étape corrige l'erreur "source release 21" en modifiant tes fichiers projet
+        run: |
+          find android -name "build.gradle" -exec sed -i 's/JavaVersion.VERSION_21/JavaVersion.VERSION_17/g' {} +
+          find android -name "build.gradle" -exec sed -i 's/sourceCompatibility = 21/sourceCompatibility = 17/g' {} +
+          find android -name "build.gradle" -exec sed -i 's/targetCompatibility = 21/targetCompatibility = 17/g' {} +
+
       - name: Build APK
         run: |
           cd android
-          # Cette ligne est CRUCIALE pour corriger ton erreur 21
-          echo "org.gradle.java.home=$JAVA_HOME_17_X64" >> gradle.properties
           chmod +x gradlew
           ./gradlew assembleDebug
 
