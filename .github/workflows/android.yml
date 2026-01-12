@@ -16,26 +16,34 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: Install dependencies
+      - name: Install Node dependencies
+        # --force permet d'ignorer les conflits de versions si package-lock est corrompu
         run: npm install --force
 
-      - name: Build Web Project
+      - name: Create .env file from Secrets
+        # Cette étape crée ton fichier .env à partir des secrets que tu as ajouté sur GitHub
+        run: |
+          echo "VITE_API_KEY=${{ secrets.VITE_API_KEY }}" > .env
+          echo "VITE_OTHER_VAR=${{ secrets.VITE_OTHER_VAR }}" >> .env
+
+      - name: Build Web Project (Vite)
         run: npm run build
 
-      - name: Install Capacitor & Android Platform
+      - name: Initialize Capacitor and Android
+        # On installe et on force la création de la plateforme Android
         run: |
           npm install @capacitor/core @capacitor/cli @capacitor/android
           npx cap init JIII com.jiii.app --web-dir dist
-          npx cap add android
+          npx cap add android || echo "Android folder already exists"
           npx cap sync android
 
-      - name: Build APK
+      - name: Build APK with Gradle
         run: |
           cd android
           chmod +x gradlew
           ./gradlew assembleDebug
 
-      - name: Upload APK
+      - name: Upload Finished APK
         uses: actions/upload-artifact@v3
         with:
           name: JIII-Mobile-App
