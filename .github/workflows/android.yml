@@ -20,19 +20,20 @@ jobs:
         run: npm install --force
 
       - name: Create .env file from Secrets
-        # REMPLACE LES NOMS CI-DESSOUS PAR TES VRAIS NOMS DE VARIABLES
+        # Cette étape écrit tes secrets dans un fichier .env que l'app lira
         run: |
           echo "VITE_API_KEY=${{ secrets.VITE_API_KEY }}" > .env
-          echo "VITE_AUTRE_VARIABLE=${{ secrets.VITE_AUTRE_VARIABLE }}" >> .env
+          echo "VITE_OTHER_VAR=${{ secrets.VITE_OTHER_VAR }}" >> .env
 
       - name: Build Web Project (Vite)
         run: npm run build
 
       - name: Initialize Capacitor and Android
+        # Force la création du dossier android sur le serveur GitHub
         run: |
           npm install @capacitor/core @capacitor/cli @capacitor/android
           npx cap init JIII com.jiii.app --web-dir dist
-          npx cap add android || echo "Android folder already exists"
+          npx cap add android || echo "Dossier déjà présent"
           npx cap sync android
 
       - name: Build APK with Gradle
