@@ -1,7 +1,7 @@
 name: Build Android APK
 on:
   push:
-    branches: [ main ] # Se déclenche quand tu envoies du code sur la branche main
+    branches: [ main ]
 
 jobs:
   build:
@@ -17,24 +17,22 @@ jobs:
           distribution: 'temurin'
 
       - name: Install dependencies
-        run: npm install
-
-      # Cette étape recrée ton fichier .env à partir des secrets GitHub
-      - name: Create .env file
-        run: |
-          echo "VITE_API_KEY=${{ secrets.MY_API_KEY }}" > .env
-          echo "VITE_OTHER_VAR=${{ secrets.OTHER_VAR }}" >> .env
+        run: npm install --force
 
       - name: Build Web Project
         run: npm run build
 
-      - name: Install Capacitor & Build Android
+      - name: Install Capacitor & Android Platform
         run: |
           npm install @capacitor/core @capacitor/cli @capacitor/android
           npx cap init JIII com.jiii.app --web-dir dist
           npx cap add android
           npx cap sync android
+
+      - name: Build APK
+        run: |
           cd android
+          chmod +x gradlew
           ./gradlew assembleDebug
 
       - name: Upload APK
