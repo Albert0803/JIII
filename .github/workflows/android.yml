@@ -17,20 +17,18 @@ jobs:
           distribution: 'temurin'
 
       - name: Install Node dependencies
-        # --force permet d'ignorer les conflits de versions si package-lock est corrompu
         run: npm install --force
 
       - name: Create .env file from Secrets
-        # Cette étape crée ton fichier .env à partir des secrets que tu as ajouté sur GitHub
+        # REMPLACE LES NOMS CI-DESSOUS PAR TES VRAIS NOMS DE VARIABLES
         run: |
           echo "VITE_API_KEY=${{ secrets.VITE_API_KEY }}" > .env
-          echo "VITE_OTHER_VAR=${{ secrets.VITE_OTHER_VAR }}" >> .env
+          echo "VITE_AUTRE_VARIABLE=${{ secrets.VITE_AUTRE_VARIABLE }}" >> .env
 
       - name: Build Web Project (Vite)
         run: npm run build
 
       - name: Initialize Capacitor and Android
-        # On installe et on force la création de la plateforme Android
         run: |
           npm install @capacitor/core @capacitor/cli @capacitor/android
           npx cap init JIII com.jiii.app --web-dir dist
