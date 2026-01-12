@@ -19,31 +19,29 @@ jobs:
       - name: Install Node dependencies
         run: npm install --force
 
-      - name: Create .env file from Secrets
-        # Cette étape écrit tes secrets dans un fichier .env que l'app lira
+      - name: Create .env file
+        # Remplace VITE_API_KEY par le nom exact de ton secret GitHub
         run: |
           echo "VITE_API_KEY=${{ secrets.VITE_API_KEY }}" > .env
-          echo "VITE_OTHER_VAR=${{ secrets.VITE_OTHER_VAR }}" >> .env
 
-      - name: Build Web Project (Vite)
+      - name: Build Web Project
         run: npm run build
 
-      - name: Initialize Capacitor and Android
-        # Force la création du dossier android sur le serveur GitHub
+      - name: Setup Capacitor Android
         run: |
           npm install @capacitor/core @capacitor/cli @capacitor/android
           npx cap init JIII com.jiii.app --web-dir dist
-          npx cap add android || echo "Dossier déjà présent"
+          npx cap add android || echo "Android folder exists"
           npx cap sync android
 
-      - name: Build APK with Gradle
+      - name: Build APK
         run: |
           cd android
           chmod +x gradlew
           ./gradlew assembleDebug
 
-      - name: Upload Finished APK
+      - name: Upload APK
         uses: actions/upload-artifact@v3
         with:
-          name: JIII-Mobile-App
+          name: Mon-Application-JIII
           path: android/app/build/outputs/apk/debug/app-debug.apk
